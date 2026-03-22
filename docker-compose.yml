@@ -33,8 +33,6 @@ services:
   rest:
     image: postgrest/postgrest:v12.2.3
     restart: unless-stopped
-    ports:
-      - "3001:3000/tcp"
     environment:
       PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@db:5432/postgres
       PGRST_DB_SCHEMAS: public
@@ -44,6 +42,24 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  # ---------- Kong API Gateway ----------
+  kong:
+    image: kong:3.7
+    restart: unless-stopped
+    ports:
+      - "3001:8000/tcp"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl
+      KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
+      KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
+    volumes:
+      - ./volumes/kong/kong.yml:/var/lib/kong/kong.yml:ro
+    depends_on:
+      - rest
 
   # ---------- Postgres Meta (for Studio) ----------
   meta:
