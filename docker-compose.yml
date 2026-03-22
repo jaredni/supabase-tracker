@@ -98,7 +98,10 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+    init: true
+    tty: true
+    stdin_open: true
     restart: unless-stopped
     ports:
       - "3002:3000/tcp"
@@ -106,8 +109,12 @@ services:
       NEXT_PUBLIC_SUPABASE_URL: http://localhost:3001
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${ANON_KEY}
       WATCHPACK_POLLING: "true"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
     depends_on:
       - rest
 
 volumes:
   db-data:
+  frontend-node-modules:
