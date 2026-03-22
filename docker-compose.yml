@@ -105,6 +105,7 @@ services:
     environment:
       NEXT_PUBLIC_SUPABASE_URL: http://localhost:3001
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${ANON_KEY}
+      WATCHPACK_POLLING: "true"
     depends_on:
       - rest
 
