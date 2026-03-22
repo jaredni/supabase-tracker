@@ -55,6 +55,7 @@ export function TaskStatusPieChart({
           innerRadius={60}
           outerRadius={100}
           paddingAngle={3}
+          cornerRadius={5}
           dataKey="value"
           stroke="none"
           onClick={handleClick}
