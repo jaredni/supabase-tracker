@@ -78,5 +78,19 @@ services:
     depends_on:
       - meta
 
+  # ---------- Frontend (Next.js) ----------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3002:3000/tcp"
+    environment:
+      NEXT_PUBLIC_SUPABASE_URL: http://localhost:3001
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${ANON_KEY}
+    depends_on:
+      - rest
+
 volumes:
   db-data:
